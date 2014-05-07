@@ -107,7 +107,14 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
 
       return {
         restrict: 'EA',
-        scope: {},
+        scope: {
+            // These should be passed into the isolate scope.
+            // example: tooltip-enable="enable"
+            // instead of tooltip-enable="{{enable}}"
+            // but this would be a breaking change.
+//          tt_enable: '=' + prefix + 'Enable',
+//          tt_animation: '=' + prefix + 'Animation'
+        },
         compile: function (tElem, tAttrs) {
           var tooltipLinker = $compile( template );
 
@@ -117,7 +124,6 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
             var popupTimeout;
             var appendToBody = angular.isDefined( options.appendToBody ) ? options.appendToBody : false;
             var triggers = getTriggers( undefined );
-            var hasEnableExp = angular.isDefined(attrs[prefix+'Enable']);
 
             var positionTooltip = function () {
 
@@ -143,7 +149,7 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
 
             // Show the tooltip with delay if specified, otherwise show it immediately
             function showTooltipBind() {
-              if(hasEnableExp && !scope.$eval(attrs[prefix+'Enable'])) {
+              if(!scope.tt_enable) {
                 return;
               }
               if ( scope.tt_popupDelay ) {
@@ -264,6 +270,11 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
               scope.tt_placement = angular.isDefined( val ) ? val : options.placement;
             });
 
+            attrs.$observe( prefix+'Enable', function ( val ) {
+              // using eval so "0" or "false" get evaluated as false
+              scope.tt_enable = angular.isDefined( val ) ? scope.$eval(val) : true;
+            });
+
             attrs.$observe( prefix+'PopupDelay', function ( val ) {
               var delay = parseInt( val, 10 );
               scope.tt_popupDelay = ! isNaN(delay) ? delay : options.popupDelay;
@@ -287,8 +298,10 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
               }
             });
 
-            var animation = scope.$eval(attrs[prefix + 'Animation']);
-            scope.tt_animation = angular.isDefined(animation) ? !!animation : options.animation;
+            attrs.$observe( prefix+'Animation', function ( val ) {
+                // using eval so "0" or "false" get evaluated as false
+              scope.tt_animation = angular.isDefined(val) ? scope.$eval(val) : options.animation;
+            });
 
             attrs.$observe( prefix+'AppendToBody', function ( val ) {
               appendToBody = angular.isDefined( val ) ? $parse( val )( scope ) : appendToBody;

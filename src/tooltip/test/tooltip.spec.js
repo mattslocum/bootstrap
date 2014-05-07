@@ -19,7 +19,7 @@ describe('tooltip', function() {
     $compile(elmBody)(scope);
     scope.$digest();
     elm = elmBody.find('span');
-    elmScope = elm.scope();
+    elmScope = elm.isolateScope();
   }));
 
   it('should not be open initially', inject(function() {
@@ -59,7 +59,7 @@ describe('tooltip', function() {
       '<span tooltip="tooltip text" tooltip-placement="bottom">Selector Text</span>'
     ) )( scope );
     scope.$apply();
-    elmScope = elm.scope();
+    elmScope = elm.isolateScope();
 
     elm.trigger( 'mouseenter' );
     expect( elmScope.tt_placement ).toBe( 'bottom' );
@@ -86,7 +86,7 @@ describe('tooltip', function() {
     tt.trigger( 'mouseenter' );
 
     expect( tt.text() ).toBe( scope.items[0].name );
-    expect( tt.scope().tt_content ).toBe( scope.items[0].tooltip );
+    expect( tt.isolateScope().tt_content ).toBe( scope.items[0].tooltip );
 
     tt.trigger( 'mouseleave' );
   }));
@@ -104,7 +104,7 @@ describe('tooltip', function() {
     $compile( elmBody )( scope );
     scope.$digest();
     elm = elmBody.find( 'span' );
-    elmScope = elm.scope();
+    elmScope = elm.isolateScope();
 
     elm.trigger( 'mouseenter' );
     expect( elm.attr( 'alt' ) ).toBe( scope.alt );
@@ -166,11 +166,11 @@ describe('tooltip', function() {
     beforeEach(inject(function ($compile) {
       scope.enable = false;
       elmBody = $compile(angular.element(
-        '<div><span tooltip="tooltip text" tooltip-enable="enable">Selector Text</span></div>'
+        '<div><span tooltip="tooltip text" tooltip-enable="{{enable}}">Selector Text</span></div>'
       ))(scope);
       scope.$digest();
       elm = elmBody.find('span');
-      elmScope = elm.scope();
+      elmScope = elm.isolateScope();
 
     }));
 
@@ -200,7 +200,7 @@ describe('tooltip', function() {
       elm = $compile(angular.element(
         '<span tooltip="tooltip text" tooltip-popup-delay="{{delay}}">Selector Text</span>'
       ))(scope);
-      elmScope = elm.scope();
+      elmScope = elm.isolateScope();
       scope.$digest();
     }));
 
@@ -246,7 +246,7 @@ describe('tooltip', function() {
       $compile(elmBody)(scope);
       scope.$apply();
       elm = elmBody.find('input');
-      elmScope = elm.scope();
+      elmScope = elm.isolateScope();
 
       expect( elmScope.tt_isOpen ).toBeFalsy();
       elm.trigger('focus');
@@ -262,7 +262,7 @@ describe('tooltip', function() {
       $compile(elmBody)(scope);
       scope.$apply();
       elm = elmBody.find('input');
-      elmScope = elm.scope();
+      elmScope = elm.isolateScope();
 
       expect( elmScope.tt_isOpen ).toBeFalsy();
       elm.trigger('fakeTriggerAttr');
@@ -285,8 +285,8 @@ describe('tooltip', function() {
       scope.$apply();
       var elm1 = elmBody.find('input').eq(0);
       var elm2 = elmBody.find('input').eq(1);
-      var elmScope1 = elm1.scope();
-      var elmScope2 = elm2.scope();
+      var elmScope1 = elm1.isolateScope();
+      var elmScope2 = elm2.isolateScope();
 
       scope.$apply('test = false');
 
@@ -318,7 +318,7 @@ describe('tooltip', function() {
       $compile(elmBody)(scope);
       scope.$digest();
       elm = elmBody.find('span');
-      elmScope = elm.scope();
+      elmScope = elm.isolateScope();
 
       var bodyLength = $body.children().length;
       elm.trigger( 'mouseenter' );
@@ -351,7 +351,7 @@ describe('tooltip', function() {
       $rootScope.$apply();
 
       elm = elmBody.find('input');
-      elmScope = elm.scope();
+      elmScope = elm.isolateScope();
       elm.trigger('fooTrigger');
       tooltipScope = elmScope.$$childTail;
     }));
@@ -415,7 +415,7 @@ describe( 'tooltipHtmlUnsafe', function() {
     ))( scope );
     scope.$digest();
     elm = elmBody.find('span');
-    elmScope = elm.scope();
+    elmScope = elm.isolateScope();
   }));
 
   it( 'should render html properly', inject( function () {
@@ -461,7 +461,7 @@ describe( '$tooltipProvider', function() {
       $compile(elmBody)(scope);
       scope.$digest();
       elm = elmBody.find('span');
-      elmScope = elm.scope();
+      elmScope = elm.isolateScope();
     }));
 
     it('should open after timeout', inject(function($timeout) {
@@ -500,7 +500,7 @@ describe( '$tooltipProvider', function() {
       $compile(elmBody)(scope);
       scope.$digest();
       elm = elmBody.find('span');
-      elmScope = elm.scope();
+      elmScope = elm.isolateScope();
 
       var bodyLength = $body.children().length;
       elm.trigger( 'mouseenter' );
@@ -520,7 +520,7 @@ describe( '$tooltipProvider', function() {
       $compile(elmBody)(scope);
       scope.$digest();
       elm = elmBody.find('span');
-      elmScope = elm.scope();
+      elmScope = elm.isolateScope();
 
       elm.trigger( 'mouseenter' );
       expect( elmScope.tt_isOpen ).toBe( true );
@@ -549,7 +549,7 @@ describe( '$tooltipProvider', function() {
         $compile(elmBody)(scope);
         scope.$digest();
         elm = elmBody.find('input');
-        elmScope = elm.scope();
+        elmScope = elm.isolateScope();
 
         expect( elmScope.tt_isOpen ).toBeFalsy();
         elm.trigger('focus');
@@ -567,7 +567,7 @@ describe( '$tooltipProvider', function() {
         $compile(elmBody)(scope);
         scope.$digest();
         elm = elmBody.find('input');
-        elmScope = elm.scope();
+        elmScope = elm.isolateScope();
 
         expect( elmScope.tt_isOpen ).toBeFalsy();
         elm.trigger('mouseenter');
@@ -595,7 +595,7 @@ describe( '$tooltipProvider', function() {
         $compile(elmBody)(scope);
         scope.$digest();
         elm = elmBody.find('input');
-        elmScope = elm.scope();
+        elmScope = elm.isolateScope();
 
         expect( elmScope.tt_isOpen ).toBeFalsy();
         elm.trigger('customOpenTrigger');
@@ -622,7 +622,7 @@ describe( '$tooltipProvider', function() {
         $compile(elmBody)(scope);
         scope.$digest();
         elm = elmBody.find('span');
-        elmScope = elm.scope();
+        elmScope = elm.isolateScope();
 
         expect( elmScope.tt_isOpen ).toBeFalsy();
         elm.trigger('fakeTrigger');
