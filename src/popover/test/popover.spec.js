@@ -19,7 +19,7 @@ describe('popover', function() {
     $compile(elmBody)(scope);
     scope.$digest();
     elm = elmBody.find('span');
-    elmScope = elm.scope();
+    elmScope = elm.isolateScope();
   }));
 
   it('should not be open initially', inject(function() {
